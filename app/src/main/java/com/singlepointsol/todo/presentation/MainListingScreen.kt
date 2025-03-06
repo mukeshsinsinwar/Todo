@@ -1,4 +1,4 @@
-package com.singlepointsol.todo.screens
+package com.singlepointsol.todo.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
