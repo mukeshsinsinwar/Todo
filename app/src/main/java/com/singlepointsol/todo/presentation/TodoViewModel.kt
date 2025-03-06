@@ -6,12 +6,12 @@ import com.singlepointsol.todo.domain.model.TodoItem
 import com.singlepointsol.todo.domain.usecase.AddTodoUseCase
 import com.singlepointsol.todo.domain.usecase.GetTodosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 
 
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class TodoViewModel @Inject constructor(
     private val getTodosUseCase: GetTodosUseCase,
@@ -27,11 +27,11 @@ class TodoViewModel @Inject constructor(
     private val _isTaskValid = MutableStateFlow(true)
     val isTaskValid: StateFlow<Boolean> = _isTaskValid.asStateFlow()
 
-    private val _errorMessage = MutableSharedFlow<String?>()
-    val errorMessage: SharedFlow<String?> = _errorMessage.asSharedFlow()
-
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     val filteredTodos = searchQuery
         .combine(todos) { query, todoList ->
@@ -39,7 +39,6 @@ class TodoViewModel @Inject constructor(
             else todoList.filter { it.taskName.contains(query, ignoreCase = true) }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
 
     init {
         viewModelScope.launch {
@@ -56,7 +55,7 @@ class TodoViewModel @Inject constructor(
         _isTaskValid.value = newValue.isNotBlank()
     }
 
-    fun addTodo(onError: (String) -> Unit) {
+    fun addTodo() {
         val task = _taskName.value.trim()
 
         if (task.isEmpty()) {
@@ -65,14 +64,27 @@ class TodoViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            _uiState.value = UiState.Loading  // Set loading state
+
             try {
                 addTodoUseCase(TodoItem(taskName = task, createdAt = System.currentTimeMillis().toString()))
-                _taskName.value = "" // Clear input field after adding
+                _taskName.value = ""  // Clear input field
+
+                delay(3000)  // Simulate API delay
+                _uiState.value = UiState.Success
             } catch (e: Exception) {
-                _errorMessage.emit("Failed to add TODO")
-                onError("Failed to add TODO")
+                delay(3000)
+                _uiState.value = UiState.Error("Failed to add TODO")
             }
         }
     }
 }
+
+sealed class UiState {
+    object Idle : UiState()
+    object Loading : UiState()
+    object Success : UiState()
+    data class Error(val message: String) : UiState()
+}
+
 
