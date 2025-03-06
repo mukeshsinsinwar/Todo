@@ -48,8 +48,8 @@ fun AddTaskScreen(
                 navController.popBackStack()
             }
 
-            UiState.Idle -> TODO()
-            UiState.Loading -> TODO()
+
+            else -> {}
         }
     }
 

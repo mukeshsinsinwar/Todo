@@ -6,6 +6,8 @@ import com.singlepointsol.todo.domain.model.TodoItem
 import com.singlepointsol.todo.domain.usecase.AddTodoUseCase
 import com.singlepointsol.todo.domain.usecase.GetTodosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 
 
@@ -33,10 +35,27 @@ class TodoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    val filteredTodos = searchQuery
+
+
+
+ /*   val filteredTodos = searchQuery
+        .debounce(2000)
         .combine(todos) { query, todoList ->
             if (query.isBlank()) todoList
             else todoList.filter { it.taskName.contains(query, ignoreCase = true) }
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())*/
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    val filteredTodos = searchQuery
+        .flatMapLatest { query ->
+            if (query.isBlank()) {
+                todos // Show all results immediately when no search query
+            } else {
+                searchQuery.debounce(1000).combine(todos) { debouncedQuery, todoList ->
+                    todoList.filter { it.taskName.contains(debouncedQuery, ignoreCase = true) }
+                }
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 

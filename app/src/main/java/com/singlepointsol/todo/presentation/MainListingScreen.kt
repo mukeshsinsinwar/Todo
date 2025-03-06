@@ -37,7 +37,6 @@ fun MainListingScreen(
     viewModel: TodoViewModel = hiltViewModel()
 ) {
     val todoList by viewModel.todos.collectAsState()
-
     val searchQuery by viewModel.searchQuery.collectAsState()
     val filteredList by viewModel.filteredTodos.collectAsState()
 
@@ -47,7 +46,7 @@ fun MainListingScreen(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
-                label = { Text("Search...") },
+                label = { Text(stringResource(R.string.search)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -86,7 +85,7 @@ fun MainListingScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "No results found", color = Color.Gray)
+                        Text(text = stringResource(R.string.no_results_found), color = Color.Gray)
                     }
                 }
 
