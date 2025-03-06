@@ -12,8 +12,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.singlepointsol.todo.R
 import com.singlepointsol.todo.ui.theme.primaryWhite
 import com.singlepointsol.todo.utils.Screen
 
@@ -23,8 +25,9 @@ fun CustomTopBar(navController: NavController) {
     val currentDestination = currentBackStackEntry?.destination?.route
 
     when (currentDestination) {
-        Screen.MainListingScreen.toString() -> DefaultTopBar("All List")
-        Screen.AddTaskScreen.toString() -> BackTopBar(navController, "Add New Task")
+        Screen.MainListingScreen.toString() -> DefaultTopBar(stringResource(R.string.all_list))
+        Screen.AddTaskScreen.toString() -> BackTopBar(navController,
+            stringResource(R.string.add_new_task))
     }
 }
 

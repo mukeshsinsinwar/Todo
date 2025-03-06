@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ToDO</string>
+    <string name="task_cannot_be_empty">Task cannot be empty</string>
+    <string name="enter_task">Enter Task</string>
+    <string name="failed_to_add_todo">Failed to add TODO</string>
+    <string name="all_list">All List</string>
+    <string name="add_new_task">Add New Task</string>
+    <string name="press_the_button_to_add_a_todo_item">Press the + button to add a TODO item</string>
 </resources>

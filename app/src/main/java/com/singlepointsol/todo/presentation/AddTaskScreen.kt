@@ -1,7 +1,6 @@
 package com.singlepointsol.todo.presentation
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.delay
+import com.singlepointsol.todo.R
 
 @Composable
 fun AddTaskScreen(
@@ -47,7 +47,9 @@ fun AddTaskScreen(
                 Toast.makeText(context, (uiState as UiState.Error).message, Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
             }
-            else -> {} // No action for Idle or Loading
+
+            UiState.Idle -> TODO()
+            UiState.Loading -> TODO()
         }
     }
 
@@ -66,7 +68,7 @@ fun AddTaskScreen(
                 OutlinedTextField(
                     value = taskName,
                     onValueChange = { viewModel.onTaskNameChange(it) },
-                    label = { Text("Enter Task") },
+                    label = { Text(stringResource(R.string.enter_task)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = !isTaskValid
@@ -74,7 +76,7 @@ fun AddTaskScreen(
 
                 if (!isTaskValid) {
                     Text(
-                        text = "Task cannot be empty",
+                        text = stringResource(R.string.task_cannot_be_empty),
                         color = Color.Red,
                         modifier = Modifier.padding(top = 4.dp)
                     )

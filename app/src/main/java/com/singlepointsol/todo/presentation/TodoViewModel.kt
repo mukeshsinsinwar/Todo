@@ -68,9 +68,9 @@ class TodoViewModel @Inject constructor(
 
             try {
                 addTodoUseCase(TodoItem(taskName = task, createdAt = System.currentTimeMillis().toString()))
-                _taskName.value = ""  // Clear input field
 
-                delay(3000)  // Simulate API delay
+                delay(3000)
+                _taskName.value = ""
                 _uiState.value = UiState.Success
             } catch (e: Exception) {
                 delay(3000)

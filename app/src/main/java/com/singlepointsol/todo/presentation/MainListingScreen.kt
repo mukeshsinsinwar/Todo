@@ -24,9 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.singlepointsol.todo.R
 import com.singlepointsol.todo.utils.Screen
 
 @Composable
@@ -69,7 +71,7 @@ fun MainListingScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Press the + button to add a TODO item",
+                            text = stringResource(R.string.press_the_button_to_add_a_todo_item),
                             color = Color.Black,
                             modifier = Modifier.clickable {
                                 navController.navigate(Screen.AddTaskScreen.toString())
