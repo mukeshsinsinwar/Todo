@@ -5,6 +5,7 @@
     <string name="failed_to_add_todo">Failed to add TODO</string>
     <string name="all_list">All List</string>
     <string name="add_new_task">Add New Task</string>
+    <string name="add_task_btn">Add Task</string>
     <string name="press_the_button_to_add_a_todo_item">Press the + button to add a TODO item</string>
     <string name="no_results_found">No results found</string>
     <string name="search">Search...</string>
