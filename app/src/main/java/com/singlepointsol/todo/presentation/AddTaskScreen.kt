@@ -21,8 +21,9 @@ fun AddTaskScreen(
     ) {
         Text(text = "THis is task screen ")
 
-       /* viewModel.addTodo("First task","24",{
 
-        })*/
+        viewModel.addTodo("New task","24",{
+
+        })
     }
 }
