@@ -1,4 +1,4 @@
-package com.singlepointsol.todo.presentation
+package com.singlepointsol.todo.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

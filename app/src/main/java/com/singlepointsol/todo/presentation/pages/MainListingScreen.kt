@@ -1,4 +1,4 @@
-package com.singlepointsol.todo.presentation
+package com.singlepointsol.todo.presentation.pages
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,40 +26,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.singlepointsol.todo.R
 import com.singlepointsol.todo.domain.model.TodoItem
-import com.singlepointsol.todo.utils.Screen
+import com.singlepointsol.todo.presentation.AddTaskFloatingActionButton
+import com.singlepointsol.todo.presentation.viewmodel.TodoViewModel
 
 @Composable
 fun MainListingScreen(
-    navController: NavController,
+    onNavigateToAddTask: () -> Unit,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
     val todoList by viewModel.todos.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val filteredList by viewModel.filteredTodos.collectAsStateWithLifecycle()
 
-
     Column(modifier = Modifier.fillMaxSize()) {
         if (todoList.isNotEmpty()) {
             SearchBar(searchQuery, viewModel::updateSearchQuery)
         }
-
         Box(modifier = Modifier.weight(1f)) {
             when {
                 todoList.isEmpty() -> {
 
                     EmptyStateMessage( stringResource(R.string.press_the_button_to_add_a_todo_item),{
-                        navController.navigate(Screen.AddTaskScreen.toString())
-
+                        onNavigateToAddTask()
                     },true)
                 }
 
                 filteredList.isEmpty() -> {
-
                     EmptyStateMessage(stringResource(R.string.no_results_found),{
-
                     },false)
                 }
 
@@ -71,8 +64,8 @@ fun MainListingScreen(
             }
         }
 
-        AddTaskButton {
-            navController.navigate(Screen.AddTaskScreen.toString())
+        AddTaskFloatingActionButton {
+            onNavigateToAddTask()
         }
     }
 }
@@ -126,19 +119,4 @@ fun TodoList(todos: List<TodoItem>) {
     }
 }
 
-@Composable
-fun AddTaskButton(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        FloatingActionButton(
-            onClick = onClick,
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add Task", tint = Color.White)
-        }
-    }
-}
+

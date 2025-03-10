@@ -13,8 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.singlepointsol.todo.common.CustomTopBar
-import com.singlepointsol.todo.presentation.AddTaskScreen
-import com.singlepointsol.todo.presentation.MainListingScreen
+import com.singlepointsol.todo.presentation.pages.AddTaskScreen
+import com.singlepointsol.todo.presentation.pages.MainListingScreen
 import com.singlepointsol.todo.utils.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,10 +43,14 @@ fun ToDoApp() {
             modifier = Modifier.padding(paddingValues) // Apply padding from Scaffold
         ) {
             composable(Screen.MainListingScreen.toString()) {
-                MainListingScreen(navController)
+                MainListingScreen(onNavigateToAddTask = {
+                    navController.navigate(Screen.AddTaskScreen.toString())
+                })
             }
             composable(Screen.AddTaskScreen.toString()) {
-                AddTaskScreen(navController)
+                AddTaskScreen(onNavigateBack = {
+                    navController.popBackStack()
+                })
             }
         }
     }
