@@ -52,7 +52,7 @@ fun BackTopBar(navController: NavController ,title: String) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White // Explicitly setting the tint color
+                    tint = Color.White
                 )
             }
         },

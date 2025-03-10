@@ -35,22 +35,11 @@ class TodoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-
-
-
- /*   val filteredTodos = searchQuery
-        .debounce(2000)
-        .combine(todos) { query, todoList ->
-            if (query.isBlank()) todoList
-            else todoList.filter { it.taskName.contains(query, ignoreCase = true) }
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())*/
-
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val filteredTodos = searchQuery
         .flatMapLatest { query ->
             if (query.isBlank()) {
-                todos // Show all results immediately when no search query
+                todos
             } else {
                 searchQuery.debounce(1000).combine(todos) { debouncedQuery, todoList ->
                     todoList.filter { it.taskName.contains(debouncedQuery, ignoreCase = true) }
@@ -83,7 +72,7 @@ class TodoViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _uiState.value = UiState.Loading  // Set loading state
+            _uiState.value = UiState.Loading
 
             try {
                 addTodoUseCase(TodoItem(taskName = task, createdAt = System.currentTimeMillis().toString()))

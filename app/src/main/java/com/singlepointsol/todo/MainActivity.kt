@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 fun ToDoApp() {
     val navController = rememberNavController()
     Scaffold(
-        topBar = { CustomTopBar(navController) } // Top bar applied to all screens
+        topBar = { CustomTopBar(navController) }
     ) { paddingValues ->
         NavHost(
             navController = navController,
