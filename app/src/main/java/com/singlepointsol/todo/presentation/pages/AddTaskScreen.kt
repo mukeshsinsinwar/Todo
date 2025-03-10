@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.singlepointsol.todo.presentation.AddTaskButton
 import com.singlepointsol.todo.presentation.LoadingIndicator
-import com.singlepointsol.todo.presentation.TaskInputField
+import com.singlepointsol.todo.presentation.AddTaskInputField
 import com.singlepointsol.todo.presentation.viewmodel.TodoViewModel
 import com.singlepointsol.todo.presentation.viewmodel.UiState
 
@@ -38,8 +38,7 @@ fun AddTaskScreen(
                 onNavigateBack()
             }
             is UiState.Error -> {
-                Toast.makeText(context, (uiState as UiState.Error).message, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(context, (uiState as UiState.Error).message, Toast.LENGTH_SHORT).show()
                 onNavigateBack()
             }
             else -> {}
@@ -55,7 +54,7 @@ fun AddTaskScreen(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            TaskInputField(
+            AddTaskInputField(
                 taskName = taskName,
                 isTaskValid = isTaskValid,
                 onTaskChange = viewModel::onTaskNameChange

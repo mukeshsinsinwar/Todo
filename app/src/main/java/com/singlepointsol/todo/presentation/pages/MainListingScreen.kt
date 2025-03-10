@@ -1,34 +1,19 @@
 package com.singlepointsol.todo.presentation.pages
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.singlepointsol.todo.R
-import com.singlepointsol.todo.domain.model.TodoItem
 import com.singlepointsol.todo.presentation.AddTaskFloatingActionButton
+import com.singlepointsol.todo.presentation.EmptyStateMessage
+import com.singlepointsol.todo.presentation.SearchBar
+import com.singlepointsol.todo.presentation.TodoList
 import com.singlepointsol.todo.presentation.viewmodel.TodoViewModel
 
 @Composable
@@ -69,54 +54,10 @@ fun MainListingScreen(
         }
     }
 }
-@Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary ,  // Border when focused
-            unfocusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary,
-            cursorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary,
-            focusedLabelColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary
-
-        ),
-        label = { Text(stringResource(R.string.search)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        singleLine = true,
-        trailingIcon = {
-            if (query.isNotEmpty()) {
-                IconButton(onClick = { onQueryChange("") }) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Clear")
-                }
-            }
-        }
-    )
-}
 
 
-@Composable
-fun EmptyStateMessage(message: String, onClick: () -> Unit, isClickable: Boolean) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = message,
-            color = Color.Gray,
-            modifier = if (isClickable) Modifier.clickable { onClick() } else Modifier
-        )
-    }
-}
 
-@Composable
-fun TodoList(todos: List<TodoItem>) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(todos) { todo ->
-            Text(text = todo.taskName, modifier = Modifier.padding(16.dp))
-        }
-    }
-}
+
+
 
 
