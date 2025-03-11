@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.singlepointsol.todo.ui.theme.ToDoTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.singlepointsol.todo.common.CustomTopBar
 import com.singlepointsol.todo.presentation.pages.AddTaskScreen
 import com.singlepointsol.todo.presentation.pages.MainListingScreen
+import com.singlepointsol.todo.presentation.viewmodel.TodoViewModel
 import com.singlepointsol.todo.utils.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,6 +36,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ToDoApp() {
     val navController = rememberNavController()
+    val viewModel: TodoViewModel = hiltViewModel()
+
     Scaffold(
         topBar = { CustomTopBar(navController) }
     ) { paddingValues ->
@@ -44,13 +48,14 @@ fun ToDoApp() {
         ) {
             composable(Screen.MainListingScreen.toString()) {
                 MainListingScreen(onNavigateToAddTask = {
+                    viewModel.clearUiStates()
                     navController.navigate(Screen.AddTaskScreen.toString())
-                })
+                },viewModel)
             }
             composable(Screen.AddTaskScreen.toString()) {
                 AddTaskScreen(onNavigateBack = {
                     navController.popBackStack()
-                })
+                },viewModel)
             }
         }
     }

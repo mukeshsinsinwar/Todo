@@ -1,18 +1,24 @@
 package com.singlepointsol.todo.presentation.viewmodel
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.singlepointsol.todo.domain.model.TodoItem
 import com.singlepointsol.todo.domain.usecase.AddTodoUseCase
 import com.singlepointsol.todo.domain.usecase.GetTodosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-
-
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +42,9 @@ class TodoViewModel @Inject constructor(
 
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
+
+    private val _showErrorDialog = MutableStateFlow(false)
+    val showErrorDialog: StateFlow<Boolean> = _showErrorDialog.asStateFlow()
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -75,6 +84,16 @@ class TodoViewModel @Inject constructor(
         _isTaskValid.value = newValue.isNotBlank()
     }
 
+    fun updateErrorDialog(isShown: Boolean){
+        _showErrorDialog.value = isShown
+
+    }
+
+    fun clearUiStates(){
+        _uiState.value = UiState.Idle
+        _taskName.value = ""
+    }
+
     fun addTodo() {
         val task = _taskName.value.trim()
 
@@ -88,13 +107,14 @@ class TodoViewModel @Inject constructor(
 
             try {
                 addTodoUseCase(TodoItem(taskName = task, createdAt = System.currentTimeMillis().toString()))
-
                 delay(3000)
-                _taskName.value = ""
                 _uiState.value = UiState.Success
             } catch (e: Exception) {
                 delay(3000)
+                updateErrorDialog(true)
                 _uiState.value = UiState.Error("Failed to add TODO")
+
+
             }
         }
     }
