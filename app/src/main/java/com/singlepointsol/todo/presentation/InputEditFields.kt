@@ -4,8 +4,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,18 +55,17 @@ fun AddTaskInputField(taskName: String, isTaskValid: Boolean, onTaskChange: (Str
 
 
 @Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
+fun SearchBar(query: String, onQueryChange: (String) -> Unit, isSearching: Boolean) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary ,  // Border when focused
-            unfocusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary,
-            cursorColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary,
-            focusedLabelColor = if (isSystemInDarkTheme()) Color.White else  MaterialTheme.colorScheme.primary
-
+            focusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.primary,
+            cursorColor = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.primary,
+            focusedLabelColor = if (isSystemInDarkTheme()) Color.White else MaterialTheme.colorScheme.primary
         ),
         label = { Text(stringResource(R.string.search)) },
         modifier = Modifier
@@ -72,7 +73,9 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
             .padding(16.dp),
         singleLine = true,
         trailingIcon = {
-            if (query.isNotEmpty()) {
+            if (isSearching) {
+                SearchLoadingIndicator()
+            } else if (query.isNotEmpty()) {
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "Clear")
                 }

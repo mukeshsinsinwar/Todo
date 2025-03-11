@@ -23,11 +23,12 @@ fun MainListingScreen(
 ) {
     val todoList by viewModel.todos.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val isSearching by viewModel.isSearching.collectAsStateWithLifecycle()
     val filteredList by viewModel.filteredTodos.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize()) {
         if (todoList.isNotEmpty()) {
-            SearchBar(searchQuery, viewModel::updateSearchQuery)
+            SearchBar(searchQuery, viewModel::updateSearchQuery,isSearching)
         }
         Box(modifier = Modifier.weight(1f)) {
             when {

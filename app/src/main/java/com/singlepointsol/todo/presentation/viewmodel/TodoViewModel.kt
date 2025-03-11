@@ -6,6 +6,7 @@ import com.singlepointsol.todo.domain.model.TodoItem
 import com.singlepointsol.todo.domain.usecase.AddTodoUseCase
 import com.singlepointsol.todo.domain.usecase.GetTodosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -14,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class TodoViewModel @Inject constructor(
     private val getTodosUseCase: GetTodosUseCase,
@@ -32,21 +34,31 @@ class TodoViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
+
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val filteredTodos = searchQuery
         .flatMapLatest { query ->
             if (query.isBlank()) {
+                _isSearching.value = false
                 todos
             } else {
-                searchQuery.debounce(1000).combine(todos) { debouncedQuery, todoList ->
-                    todoList.filter { it.taskName.contains(debouncedQuery, ignoreCase = true) }
-                }
+                _isSearching.value = true
+                searchQuery.debounce(1000).onEach { }
+                    .combine(todos) { debouncedQuery, todoList ->
+                        todoList.filter { it.taskName.contains(debouncedQuery, ignoreCase = true) }
+                    }
+                    .onEach { _isSearching.value = false }
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+
 
     init {
         viewModelScope.launch {
